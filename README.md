@@ -1,2 +1,132 @@
-# Pixel-Art-OCR-PixelReader
+# PixelReader
 PixelReader allows you to perform Optical Character Recognition (OCR) on some pixel art that you have transcribed in numeric format!
+
+![Demonstration](https://github.com/LPBeaulieu/Pixel-Art-OCR-PixelReader/blob/main/GitHub%20Images/pixelreader_demonstration.png)
+<h3 align="center">PixelReader</h3>
+<div align="center">
+  
+  [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPLv3.0-brightgreen.svg)](https://github.com/LPBeaulieu/Handwriting-OCR-ScriptReader/blob/main/LICENSE)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/LPBeaulieu/Handwriting-OCR-ScriptReader)](https://github.com/LPBeaulieu/Handwriting-OCR-ScriptReader)
+  ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+  ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+  
+</div>
+
+---
+
+<p align="left"> <b>PixelReader</b> is a tool enabling you to convert scanned handwritten pages (in JPEG image format) of some pixel art that you transcribed into numbered format into digital text format, which itself is then used to generate a PNG image of clean and crisp pixel art! A neat functionality of <b>PixelReader</b> is that the typos (square dot grid cells containing mistakes, which are filled in with ink) automatically get filtered out, and do not appear in the final text file. You can print out your own smart notebook pages with black squares at the top of the pages to automatically correct any page tilt of the scanned images either by using PrintANotebook (see https://github.com/LPBeaulieu/Notebook-Maker-PrintANotebook, and the "Usage" section below), or the A4 or US Letter notebook pages with 0.13 inch dot spacing found in the zipped release folder. Simply print the PDF document in duplex landscape mode, flipping on the short side, and make sure to disable any page resizing when printing the pages in order to have accurate dot spacing.<br>
+
+My tests with close to 5,000 characters of training data (8 half-letter pages with 0.13 inch dot spacing and double line spacing) consistently gave me an <b>OCR accuracy of around 99.8%!</b>
+<br> 
+</p>
+
+## 📝 Table of Contents
+- [Dependencies / Limitations](#limitations)
+- [Getting Started](#getting_started)
+- [Usage](#usage)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
+
+## ⛓️ Dependencies / Limitations <a name = "limitations"></a>
+- This Python project relies on the Fastai deep learning library (https://docs.fast.ai/) to generate a convolutional neural network 
+  (CNN) deep learning model, which allows for handwriting optical character recognition (OCR). It also needs OpenCV to perform image segmentation 
+  (to crop the individual characters in the handwritten scanned images).
+  
+- For best results (around 99.8% accuracy), you should train your own CNN OCR model on your handwriting, although you are welcome to use the model included in the release trained on my handwriting for the digits 0-9 and the letters "L" and "P" (more on that later). The "Resources on Dataset Training" folder in the release contains all of my scanned training dataset pages, along with the required label text files that mirror the handwritten text. You could simply try to follow as closely as possible the text that I have written on your own blank notebook pages using the <b>ScriptReader</b> GitHub repository's "create_dataset.py" and "train_model.py" scripts (or the related executable files that run on Windows 10 and above, all found at the following link: https://github.com/LPBeaulieu/Handwriting-OCR-ScriptReader). Just modify the text files if you have made any mistakes so that they match exactly your own pages, and follow the detailed instructions on the <b>ScriptReader</b> GitHub repository to train your own model.
+
+- The <b>ScriptReader</b> pages from PrintANotebook need to be used, and the individual letters need to be written within the vertical boundaries of a given dot grid square cell (comprised of four dots). The segmentation code allows plenty of space above and below the line of text for ascenders and descenders, however. The handwritten pages should be <b>scanned at a resolution of 300 dpi, with the text facing the top of the page</b>, as the black squares will be used to automatically align the pages. You should refrain from writing near the black squares to allow for the alignment to be unimpeded by any artifacts. You can write with any color of ink, as long as it is saturated enough to be picked up by your scanner, as the images are converted to greyscale images for training the model and OCR. I suggest using a mechanical pencil (I used a 0.7 mm HB mechanical pencil) so that you could get very consistent lines and easily erase mistakes.  
+
+- I drew dots in the zeros, as I used the same data to train a handwriting model of mine and I wanted to make sure that the zeros weren't confused with an uppercase "O".
+  
+-Should you modify the text files generated by the "get_predictions.py" code, make sure to save the resulting modified files as ".txt" files so that the "txt2png.py" code may adequately process the files.
+
+
+## 🏁 Getting Started <a name = "getting_started"></a>
+
+If your PC runs on Windows version 10 or later with a x86-64 architecture, then you will be able to run the compiled version of the Python scripts without need for installation of dependencies. Simply download the zipped folder in the release section and extract it in any destination of your choosing where you have writing permissions, such as the "Documents" folder. Then move on to the "Usage" section below for more on how to use the executable files within the working folder. **You might be prompted to install the Microsoft Visual C++ Redistributable in the PowerShell window when launching the executable files; simply click on the link in the PowerShell window to install it on your system.**
+
+The following instructions will be provided in great detail, as they are intended for a broad audience and will
+allow to run a copy of <b>PixelReader</b> on a local computer.
+
+Start by holding the "Shift" key while right-clicking in your working folder, then select "Open PowerShell window here" to access the PowerShell in your working folder and enter the commands described below.
+
+<b>Step 1</b>- Install <b>PyTorch</b> (Required Fastai library to convert images into a format usable for deep learning) using the following command (or the equivalent command found at https://pytorch.org/get-started/locally/ suitable to your system):
+```
+pip3 install torch torchvision
+```
+
+<b>Step 2</b>- Install the <i>CPU-only</i> version of <b>Fastai</b>, which is a deep learning Python library. The CPU-only version suffices for this application, as the character images are very small in size:
+```
+py -m pip install fastai
+```
+
+<b>Step 3</b>- Install <b>OpenCV</b> (Python library for image segmentation):
+```
+py -m pip install opencv-python
+```
+
+<b>Step 4</b>- Install <b>alive-Progress</b> (Python module for a progress bar displayed in command line):
+```
+py -m pip install alive-progress
+```
+
+<b>Step 5</b>- Install <b>Pillow</b> (Python module for processing and generating PNG files):
+```
+py -m pip install Pillow
+```
+
+<b>Step 6</b>- Create the folders "Training&Validation Data" and "OCR Raw Data" in your working folder:
+```
+mkdir "OCR Raw Data" 
+mkdir "Training&Validation Data" 
+```
+
+<b>Step 7</b>- You're now ready to use <b>PixelReader</b>! 🎉
+
+## 🎈 Usage <a name="usage"></a>
+First off, you will need to print some <b>ScriptReader</b> notebook pages, which are special in that they are dot grid pages with line spacing in-between
+lines of text, so that there may be enough room to accommodate the ascenders and descenders of your handwriting when performing OCR. Also, these pages have black squares in the top of the page, which help the code to automatically align the pages in order to correct for slight rotation angles (below about 1 degree) of the scanned images. Please refer to the <b>PrintANotebook</b> GitHub repository for the basics on how to run this application on your system. 
+<br><br>
+For a basic template, simply pass in "scriptreader:" as an additional argument when running <b>PrintANotebook</b>, with the following parameters after the colon, each separated by additional colons: the number of inches in-between dot grid dots (in inches and in decimal form, but without units):the dot diameter (5 px is a good value): the dot line width (1 px is appropriate): the number of lines in-between the lines of text (2 works well for me, but if your handwriting has marked ascenders and descenders, you might want to go with 3): gutter margin width (in inches and decimal form, but without units, 0.75 is a good setting that allows for you to use a hole punch). For example, the following ("scriptreader:0.13:5:1:2:0.75") would mean that there is 0.13 inch in-between dots, the dot diameter is 5 px, the dot line width is 1 px, there are two empty lines in-between every line of text and that the gutter margin measures 0.75 inch:
+```
+py printanotebook.py "scriptreader:0.13:5:1:2:0.75" "title:Notebook" "author:Pages" "toc_pages_spacing:2" "number_of_pages:198" "page_numbers" "inches_per_ream_500_pages:2" 
+```
+<br>
+
+![Punching instructions](https://github.com/LPBeaulieu/Handwriting-OCR-ScriptReader/blob/main/ScriptReader%20Github%20Page%20Images/Officemate%20Heavy%20Duty%20Adjustable%202-3%20Hole%20Punch%20with%20Lever%20Handle.png)<hr>
+Once you have printed your notebook, you could punch 3 holes at the standard 2.75 inch spacing of Junior ring binders, using the instructions of the image above, for an Officemate Heavy Duty Adjustable 2-3 Hole Punch with Lever Handle, which could readily punch holes through 10 sheets of 28 lb half letter paper at a time in my experience (while I'm not affiliated with the company that makes that hole punch, I do recommend it).<br><br>
+
+![Punched notebooks](https://github.com/LPBeaulieu/Handwriting-OCR-ScriptReader/blob/main/ScriptReader%20Github%20Page%20Images/Punched%20Notebooks.jpg)<hr>
+Here is what the notebooks you generate might look like! <br><br>
+
+There are two different Python code files that are to be run in sequence once you have your OCR mode:<br><br>
+<b>File 1: "get_predictions.py"</b>- This code will perform OCR on JPEG images of scanned handwritten text (at a resolution of 300 dpi and with the US Letter or A4 page size setting) that you will place in the folder "OCR Raw Data". 
+  
+<b>Please note that all of the JPEG file names in the "OCR Raw Data" folder must contain at least one hyphen ("-") in order for the code to properly create subfolders in the "OCR Predictions" folder. These subfolders will contain the rich text format (RTF) OCR conversion documents.</b> 
+    
+The reason for this is that when you will scan a large document with a multi-page scanner, you will provide your scanner with a file root name (e.g. "my_text-") and the scanner will number them automatically (e.g."my_text-.jpg", "my_text-0001.jpg", "my_text-0002.jpg", "my_text-"0003.jpg", etc.) and the code would then label the subfolder within the "OCR Predictions" folder as "my_text". The OCR prediction results for each page will be added in sequence to the "my_text.txt" file within the "my_text" subfolder of the "OCR Predictions" folder.
+  
+When scanning the <b>ScriptReader</b> notebook pages generated with PrintANotebook, you would ideally need to scan them with a multi-page scanner, which is typically found in all-in-one printers. Select 300 dpi resolution, JPEG file format, as well as the US Letter or A4 size setting and <b>first scan the odd pages (right-hand pages)</b> by specifying a file name that ends with a hyphen. <b>Once the odd pages are scanned</b>, you would simply <b>scan the reverse pages of the recovered stack of pages (starting with the last one on top of the stack), with the same file name, but preceded by "back"</b>. The code will automatically assemble the left- and right-hand pages in the right order when performing OCR predictions, so you can just scan the recovered stack of pages as-is without reordering it. For example, your first scanned right-hand page file name would be "my_text-.jpg" and your first scanned left-hand page (the back side of the last odd page) file name would be "back my_text-.jpg".
+
+<b>File 2: "txt2png.py"</b>- This code will proofread your TXT files for common issues like rows that contain too many characters (a number of characters exceeding your pixel art canvas width) and then generate your PNG file by converting each digit to its corresponding encoded color found in the "color_key.csv" Comma-Separated Value (CSV) file. 
+    
+<br><b>Well there you have it!</b> You're now ready to convert your numerically-encoded handwritten pixel art text into crisp pixel art PNG files! You can now draw/write at the cottage or in the park without worrying about your laptop's battery life and still get your images polished up in digital form in the end! 🎉📖
+  
+  
+## ✍️ Authors <a name = "author"></a>
+- 👋 Hi, I’m Louis-Philippe!
+- 👀 I’m interested in natural language processing (NLP) and anything to do with words, really! 📝
+- 🌱 I’m currently reading about deep learning (and reviewing the underlying math involved in coding such applications 🧮😕)
+- 📫 How to reach me: By e-mail! LPBeaulieu@gmail.com 💻
+
+
+## 🎉 Acknowledgments <a name = "acknowledgments"></a>
+- Hat tip to [@kylelobo](https://github.com/kylelobo) for the GitHub README template!
+
+
+
+
+<!---
+LPBeaulieu/LPBeaulieu is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+You can click the Preview link to take a look at your changes.
+--->
