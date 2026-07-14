@@ -1,5 +1,5 @@
 # PixelReader
-PixelReader allows you to perform Optical Character Recognition (OCR) on some pixel art that you have transcribed in numeric format!
+PixelReader allows you to perform handwriting Optical Character Recognition (OCR) on some pixel art that you have transcribed in numeric format!
 
 ![Demonstration](https://github.com/LPBeaulieu/Pixel-Art-OCR-PixelReader/blob/main/GitHub%20Images/pixelreader_demo.png)
 <h3 align="center">PixelReader</h3>
