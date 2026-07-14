@@ -126,7 +126,7 @@ The CSV file should contain the digits 0-9 plus the "space" categories in the fi
 While OCR errors resulting in a digit being changed to another digit may be best handled by modifying the PNG files directly, some OCR mistakes involving "L" or "P" characters will result in the loss of a line ("L") or page ("P") break if these characters get swapped for a digit or a space, for instance. In the example above, the topmost frog is the ideal frog, while the frog below it is less so. While the final character in row 3 is normally an "L", signifying a line break that will fill up the remaining cells of the row with spaces (here two more spaces will be added), the bottom frog has an OCR error that changed that "L" for a "1". Consequently, the code "ate up" the first space of the next line to make up for the missing character on the line, which ends up making rows 3 and 4 look staggered. To correct this, you would need to revert the erroneous 1 back to an "L", followed by deleting the extra space at the end of row 3 and adding a space 
 at the start row 4.<br><br>
     
-<br><b>Well there you have it!</b> You're now ready to convert your numerically-encoded handwritten pixel art text into crisp PNG files! You can now draw/write at the cottage or in the park without worrying about your laptop's battery life and still get your images polished up in digital form in the end! 🎉📖
+<b>Well there you have it!</b> You're now ready to convert your numerically-encoded handwritten pixel art text into crisp PNG files! You can now draw/write at the cottage or in the park without worrying about your laptop's battery life and still get your images polished up in digital form in the end! 🎉📖
   
   
 ## ✍️ Authors <a name = "author"></a>
